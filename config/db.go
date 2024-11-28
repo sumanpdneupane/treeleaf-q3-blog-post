@@ -74,7 +74,7 @@ func CreateTables() {
 			user_id INT NOT NULL,
 			title VARCHAR(255) NOT NULL,
 			content TEXT NOT NULL,
-			thumbnail_url VARCHAR(255),
+			thumbnail_url VARCHAR(255) NOT NULL,
 			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 			updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 			FOREIGN KEY (user_id) REFERENCES Users(id)
