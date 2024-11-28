@@ -44,19 +44,6 @@ func LoginUser(c *fiber.Ctx) error {
 		return utils.RespondWithError(c, fiber.StatusUnauthorized, "Invalid credentials")
 	}
 
-	// Generate JWT with 72-hour expiration
-	// var JWT_SECRET = os.Getenv("JWT_SECRET")
-	// expirationTime := time.Now().Add(time.Hour * 72).Unix()
-	// token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-	// 	"user_id": user.ID,
-	// 	"role":    user.Role,
-	// 	"exp":     expirationTime,
-	// })
-	// signedToken, err := token.SignedString([]byte(JWT_SECRET))
-	// if err != nil {
-	// 	return utils.RespondWithError(c, fiber.StatusInternalServerError, "Error generating token")
-	// }
-
 	// Generate JWT using the utility function
 	token, err := middleware.GenerateJWT(user.ID, user.Role, 0) // Default expiration of 72 hours
 	if err != nil {
