@@ -11,4 +11,8 @@ func SetupRoutes(app *fiber.App) {
 	auth := app.Group("/auth")
 	auth.Post("/register", controllers.RegisterUser)
 	auth.Post("/login", controllers.LoginUser)
+
+	// Blog routes (protected by auth middleware)
+	blogGroup := app.Group("/blogs")
+	blogGroup.Post("/", controllers.CreateBlog)
 }

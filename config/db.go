@@ -67,4 +67,21 @@ func CreateTables() {
 
 	fmt.Println("User table created or already exists.")
 
+	// Create Blog table if it does not exist
+	blogTableQuery := `
+		CREATE TABLE IF NOT EXISTS Blogs (
+			id INT AUTO_INCREMENT PRIMARY KEY,
+			user_id INT NOT NULL,
+			title VARCHAR(255) NOT NULL,
+			content TEXT NOT NULL,
+			thumbnail_url VARCHAR(255),
+			created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+			FOREIGN KEY (user_id) REFERENCES Users(id)
+		);
+	`
+	_, err = DB.Exec(blogTableQuery)
+	if err != nil {
+		log.Fatal("Error creating Blog table: ", err)
+	}
+	fmt.Println("Blog table created or already exists.")
 }
