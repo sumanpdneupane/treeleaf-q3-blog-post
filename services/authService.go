@@ -1,6 +1,7 @@
 package services
 
 import (
+	"database/sql"
 	"q3-blog-app/config"
 	"q3-blog-app/models"
 
@@ -13,6 +14,16 @@ func RegisterUser(user *models.User) error {
 		return err
 	}
 	user.Password = string(hashedPassword)
-	_, err = config.DB.Exec("INSERT INTO users (username, password, role) VALUES (?, ?, ?)", user.Username, user.Password, user.Role)
+	_, err = config.DB.Exec("INSERT INTO Users (username, password, email, role) VALUES (?, ?, ?, ?)", user.Username, user.Password, user.Email, user.Role)
 	return err
+}
+
+func GetUserByUsername(username string) (*models.User, error) {
+	var user models.User
+	err := config.DB.QueryRow("SELECT id, username, email, password, role FROM Users WHERE username = ?", username).
+		Scan(&user.ID, &user.Username, &user.Email, &user.Password, &user.Role)
+	if err == sql.ErrNoRows {
+		return nil, err
+	}
+	return &user, err
 }

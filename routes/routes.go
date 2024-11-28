@@ -8,6 +8,7 @@ import (
 
 func SetupRoutes(app *fiber.App) {
 	//Auth routes
-	app.Post("/register", controllers.RegisterUser)
-	app.Post("/login", controllers.LoginUser)
+	auth := app.Group("/auth")
+	auth.Post("/register", controllers.RegisterUser)
+	auth.Post("/login", controllers.LoginUser)
 }
