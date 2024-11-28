@@ -1,13 +1,11 @@
 package controllers
 
 import (
-	"os"
+	"q3-blog-app/middleware"
 	"q3-blog-app/models"
 	"q3-blog-app/services"
 	"q3-blog-app/utils"
-	"time"
 
-	"github.com/dgrijalva/jwt-go"
 	"github.com/gofiber/fiber/v2"
 	"golang.org/x/crypto/bcrypt"
 )
@@ -46,18 +44,11 @@ func LoginUser(c *fiber.Ctx) error {
 		return utils.RespondWithError(c, fiber.StatusUnauthorized, "Invalid credentials")
 	}
 
-	// Generate JWT with 72-hour expiration
-	var JWT_SECRET = os.Getenv("JWT_SECRET")
-	expirationTime := time.Now().Add(time.Hour * 72).Unix()
-	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"user_id": user.ID,
-		"role":    user.Role,
-		"exp":     expirationTime,
-	})
-	signedToken, err := token.SignedString([]byte(JWT_SECRET))
+	// Generate JWT using the utility function
+	token, err := middleware.GenerateJWT(user.ID, user.Role, 0) // Default expiration of 72 hours
 	if err != nil {
 		return utils.RespondWithError(c, fiber.StatusInternalServerError, "Error generating token")
 	}
 
-	return utils.RespondWithJSON(c, fiber.StatusOK, fiber.Map{"token": signedToken})
+	return utils.RespondWithJSON(c, fiber.StatusOK, fiber.Map{"token": token})
 }
