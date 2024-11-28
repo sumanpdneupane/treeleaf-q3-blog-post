@@ -8,4 +8,10 @@ func main() {
 
 	// Connect to database
 	config.ConnectDB()
+
+	// Create the database if they do not exist
+	config.CreateDatabase()
+
+	// Create the tables if they do not exist
+	config.CreateTables()
 }
