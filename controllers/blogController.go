@@ -17,6 +17,11 @@ func CreateBlog(c *fiber.Ctx) error {
 		return utils.RespondWithError(c, fiber.StatusBadRequest, "Invalid input"+err.Error())
 	}
 
+	// Validate the Blog struct
+	if err := blog.Validate(); err != nil {
+		return utils.RespondWithError(c, fiber.StatusBadRequest, "Validation failed: "+err.Error())
+	}
+
 	if err := services.CreateBlog(&blog); err != nil {
 		return utils.RespondWithError(c, fiber.StatusInternalServerError, "Error saving blog")
 	}
@@ -48,6 +53,11 @@ func UpdateBlog(c *fiber.Ctx) error {
 	var updatedBlog models.Blog
 	if err := c.BodyParser(&updatedBlog); err != nil {
 		return utils.RespondWithError(c, fiber.StatusBadRequest, fmt.Sprintf("Error parsing blog: %s", err.Error()))
+	}
+
+	// Validate the Blog struct
+	if err := updatedBlog.Validate(); err != nil {
+		return utils.RespondWithError(c, fiber.StatusBadRequest, "Validation failed: "+err.Error())
 	}
 
 	updatedBlog.UpdatedAt = time.Now().Format("2006-01-02 15:04:05")
